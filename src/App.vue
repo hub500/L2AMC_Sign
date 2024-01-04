@@ -69,6 +69,9 @@ async function unisat_sign() {
   } catch (e) {
     console.log("[ERR]signMessage", e);
   }
+  if (!sign_result.value) {
+    return
+  }
 
   try {
     let sig = Signature.from(sign_result_hex.value);
