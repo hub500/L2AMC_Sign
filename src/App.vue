@@ -65,7 +65,13 @@ async function unisat_sign() {
     console.log(res);
     console.log(res_hex);
     sign_result.value = res;
-    sign_result_hex.value = res_hex;
+    sign_result_hex.value = "0x" + res_hex;
+
+    let sig = Signature.from("0x" + res_hex);
+    console.log(sig.v, sig.r, sig.s);
+    console.log("v", ethers.getBigInt(sig.v));
+    console.log("r", ethers.getBigInt(sig.r));
+    console.log("s", ethers.getBigInt(sig.s));
   } catch (e) {
     console.log(e);
   }
