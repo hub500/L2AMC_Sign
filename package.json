@@ -1,0 +1,22 @@
+{
+  "name": "l2amc-dapp",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@unisat/wallet-utils": "^1.0.0",
+    "bitcore-lib": "^10.0.21",
+    "buffer": "^6.0.3",
+    "ethers": "^6.9.1",
+    "vue": "^3.3.11"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.5.2",
+    "vite": "^5.0.8"
+  }
+}
