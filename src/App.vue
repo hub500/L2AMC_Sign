@@ -3,6 +3,7 @@
 // import bitcore from "bitcore-lib";
 import { ref } from "vue";
 import { ethers, Signature, verifyMessage } from "ethers";
+import { Buffer } from "buffer";
 
 const address = ref("");
 const address_eth = ref("");
