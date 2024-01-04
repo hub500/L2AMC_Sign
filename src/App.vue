@@ -61,6 +61,9 @@ async function unisat_publickey() {
 async function unisat_sign() {
   try {
     let res = await window.unisat.signMessage(message);
+    if (!res) {
+      return
+    }
     let res_hex = Buffer.from(res, "base64").toString("hex");
     console.log(res);
     console.log(res_hex);
