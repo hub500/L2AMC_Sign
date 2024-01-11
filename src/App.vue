@@ -7,11 +7,13 @@ import { Buffer } from "buffer";
 
 const address = ref("");
 const address_eth = ref("");
+const address_sol = ref("");
 const pubkey = ref("");
 const message = "hello";
 const sign_result = ref("");
 const sign_result_hex = ref("");
 const sign_result_eth = ref("");
+const sign_result_sol = ref("");
 
 // function verifyMessage(publicKey, text, sig) {
 //   const message = new bitcore.Message(text);
@@ -136,6 +138,55 @@ async function eth_sign() {
 
   sign_result_eth.value = sign_result;
 }
+
+const getProvider = () => {
+  if ('phantom' in window) {
+    const provider = window.phantom?.solana;
+
+    if (provider?.isPhantom) {
+      return provider;
+    }
+  }
+
+  window.open('https://phantom.app/', '_blank');
+};
+
+async function sol_connect() {
+  try {
+    const wallet = await getProvider().request({ method: "connect" });
+    console.log(wallet);
+    console.log(wallet.publicKey.toString());
+    console.log(wallet.publicKey.toBase58());
+    address_sol.value = wallet.publicKey.toString();
+  } catch (err) {
+    console.log(err);
+    // { code: 4001, message: 'User rejected the request.' }
+  }
+}
+
+async function sol_publickey() {
+  await sol_connect();
+}
+
+async function sol_sign() {
+  const provider = getProvider(); // see "Detecting the Provider"
+  const encodedMessage = new TextEncoder().encode(message);
+  const signedMessage = await provider.signMessage(encodedMessage, "utf8");
+  console.log(signedMessage);
+  console.log(signedMessage.publicKey.toString());
+  console.log(signedMessage.signature.toString("hex"));
+
+  try {
+    const sign_result = signedMessage.signature.toString("hex");
+    let sig = Signature.from("0x" + sign_result);
+    console.log(sig.v, sig.r, sig.s);
+    console.log("v", ethers.getBigInt(sig.v));
+    console.log("r", ethers.getBigInt(sig.r));
+    console.log("s", ethers.getBigInt(sig.s));
+  } catch (e) {
+    console.log("[ERR]Signature", e);
+  }
+}
 </script>
 
 <template>
@@ -172,6 +223,16 @@ async function eth_sign() {
     <button @click="eth_connect">eth connect</button>
     <button @click="eth_publickey">eth public key</button>
     <button @click="eth_sign">eth sign message</button>
+  </div>
+
+  <hr />
+
+  solana wallet <strong>{{ address_sol }}</strong>
+
+  <div>
+    <button @click="sol_connect">sol connect</button>
+    <button @click="sol_publickey">sol public key</button>
+    <button @click="sol_sign">sol sign message</button>
   </div>
   <div>{{ sign_result_eth }}</div>
 </template>
